@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-local-app-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: k8s-local-app
+  template:
+    metadata:
+      labels:
+        app: k8s-local-app
+    spec:
+      containers:
+        - name: k8s-local-app
+          image: rashmi45/k8s-local:latest
+          ports:
+            - containerPort: 3000
+          env:
+            # ── From ConfigMap ──────────────────────────────────────────
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: database_url
+            - name: CACHE_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: cache_size
+            - name: PAYMENT_GATEWAY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: payment_gateway_url
+            - name: MAX_CART_ITEMS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: max_cart_items
+            - name: SESSION_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: session_timeout
+            # ── From Secret ─────────────────────────────────────────────
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: db_username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: db_password
