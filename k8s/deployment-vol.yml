@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-local-app-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: k8s-local-app
+  template:
+    metadata:
+      labels:
+        app: k8s-local-app
+    spec:
+      containers:
+        - name: k8s-local-app
+          image: rashmi45/k8s-local:latest
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: env-file
+              readOnly: true
+              mountPath: /usr/src/app/config
+      volumes:
+        - name: env-file
+          secret:
+            secretName: app-secret
+
