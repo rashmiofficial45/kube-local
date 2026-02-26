@@ -1,4 +1,9 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({
+    path: path.resolve(process.cwd(), 'config/.env')
+});
 const app = express();
 const port = 3000;
 app.get('/', (req, res) => {
@@ -28,6 +33,7 @@ app.get('/', (req, res) => {
       </body>
     </html>
   `);
+    // console.log('Current working directory:', process.cwd());
 });
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
